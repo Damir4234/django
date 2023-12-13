@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Skystore - Контакты</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar {
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            background-color: #007bff;
+            color: #fff;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .form-control {
+            border-radius: 5px;
+        }
+
+        .btn-outline-primary {
+            color: #007bff;
+            border-color: #007bff;
+        }
+
+        .btn-outline-primary:hover {
+            color: #fff;
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        footer {
+            background-color: #f8f9fa;
+            padding: 50px 0;
+            border-top: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-9 col-md-6 col-sm-12 mx-auto mt-5">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <table class="table table-striped">
+                        <tr>
+                            <td class="w-25">Страна</td>
+                            <td>USA</td>
+                        </tr>
+                        <tr>
+                            <td class="w-25">ИНН</td>
+                            <td>91-1144442</td>
+                        </tr>
+                        <tr>
+                            <td class="w-25">Адрес</td>
+                            <td>Redmond, WA, 98052-6399</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-12 mx-auto mt-5">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h4 class="my-0 font-weight-normal">Свяжитесь с нами</h4>
+                </div>
+                <div class="card-body">
+                    <form method="post" action="/contacts/">
+                        <!-- замените "/submit_form" на свой URL или путь к скрипту обработки формы -->
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="name">Имя</label>
+                            <input type="text" name="name" class="form-control" id="name" placeholder="Ваше имя" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="phone">Телефон</label>
+                            <input type="text" name="phone" class="form-control" id="phone" placeholder="Контактный телефон" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="message">Сообщение</label>
+                            <textarea type="text" name="message" class="form-control" id="message" placeholder="О себе" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-lg btn-block btn-outline-primary">Отправить</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer class="pt-4 my-md-5 pt-md-5 border-top">
+        <div class="row">
+            <div class="col-12 col-md">
+                SkyStore
+                <small class="d-block mb-3 text-muted">&copy; 2023</small>
+            </div>
+            <div class="col-6 col-md">
+                <h5>Категории</h5>
+                <ul class="list-unstyled text-small">
+                    <li><a class="text-muted" href="#">Рассылки</a></li>
+                    <li><a class="text-muted" href="#">Телеграм боты</a></li>
+                    <li><a class="text-muted" href="#">Полезные утилиты</a></li>
+                    <li><a class="text-muted" href="#">Веб-приложения</a></li>
+                    <li><a class="text-muted" href="#">Микросервисы</a></li>
+                </ul>
+            </div>
+            <div class="col-6 col-md">
+                <h5>Дополнительно</h5>
+                <ul class="list-unstyled text-small">
+                    <li><a class="text-muted" href="#">Мы пишем</a></li>
+                </ul>
+            </div>
+            <div class="col-6 col-md">
+                <h5>О нас</h5>
+                <ul class="list-unstyled text-small">
+                    <li><a class="text-muted" href="/contacts/">Контакты</a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+</div>
+</body>
+</html>
