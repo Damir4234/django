@@ -11,6 +11,5 @@ def contacts(request):
         phone = request.POST.get('phone')
         message = request.POST.get('message')
         print(f'{name}, {phone}, {message}')
-        # Делайте необходимые операции с данными из формы здесь (например, сохранение в базу данных)
 
     return render(request, 'catalog/contacts.html')
