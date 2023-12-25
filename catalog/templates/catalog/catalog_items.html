@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<!-- Вывод категорий -->
+<h2>Категории</h2>
+<ul>
+    {% for category in categories %}
+    <li>{{ category.name }}</li>
+    <!-- Здесь можете выводить другие данные о категориях -->
+    {% endfor %}
+</ul>
+
+<!-- Вывод продуктов -->
+<h2>Продукты</h2>
+<ul>
+    {% for product in products %}
+    <li>{{ product.name }} - {{ product.description }} - {{ product.purchase_price }}</li>
+    <!-- Здесь можете выводить другие данные о продуктах -->
+    {% endfor %}
+</ul>
+</body>
+</html>

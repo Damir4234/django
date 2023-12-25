@@ -80,13 +80,14 @@
 <div class="header">
     <h5 class="font-weight-normal">Skystore</h5>
     <nav>
-        <a href="/" class="btn btn-outline-primary">Каталог</a>
+        <a href="{% url 'catalog_items' %}" class="btn btn-outline-primary">Каталог</a>
         <a href="/contacts/" class="btn btn-outline-primary">Контакты</a>
     </nav>
 </div>
 <div class="pricing-header">
     <h1>Skystore</h1>
-    <p class="lead">Skystore - это отличный вариант хранения ваших плагинов и примеров кода, который вы бы хотели продать</p>
+    <p class="lead">Skystore - это отличный вариант хранения ваших плагинов и примеров кода, который вы бы хотели
+        продать</p>
 </div>
 <div class="container">
     <div class="row text-center">
@@ -138,6 +139,22 @@
             </div>
         </div>
     </footer>
+</div>
+<div class="row text-center">
+    {% for product in products %}
+    <div class="col-3">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="font-weight-normal">{{ product.name }}</h4>
+            </div>
+            <div class="card-body">
+                <p>{{ product.description }}</p>
+                <p>Цена: ${{ product.purchase_price }}</p>
+                <a href="{% url 'product_detail' product.id %}" class="btn btn-outline-primary">Подробнее</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
 </div>
 </body>
 </html>
