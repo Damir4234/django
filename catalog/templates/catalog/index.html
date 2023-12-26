@@ -148,7 +148,7 @@
                 <h4 class="font-weight-normal">{{ product.name }}</h4>
             </div>
             <div class="card-body">
-                <p>{{ product.description }}</p>
+                <p>{{ product.description|truncatechars:100 }}</p>
                 <p>Цена: ${{ product.purchase_price }}</p>
                 <a href="{% url 'product_detail' product.id %}" class="btn btn-outline-primary">Подробнее</a>
             </div>
