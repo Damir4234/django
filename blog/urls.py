@@ -3,7 +3,7 @@ from . import views
 from blog.apps import BlogConfig
 
 
-app_name = BlogConfig.name
+app_name = 'blog'
 
 urlpatterns = [
     path('create/', views.BlogCreateView.as_view(), name='create'),
