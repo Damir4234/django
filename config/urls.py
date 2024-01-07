@@ -22,4 +22,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('catalog.urls')),  # Пустой путь перенаправляется в catalog.urls
     path('contacts/', include('catalog.urls')),  # URL для страницы контактов также перенаправляется в catalog.urls
+    path('blog/', include('blog.urls')),
 ]
