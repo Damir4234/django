@@ -1,4 +1,5 @@
-from django.shortcuts import render
+from django.shortcuts import redirect, render
+from catalog.forms import ProductForm
 
 from catalog.models import Category, Product
 from django.views import View
@@ -47,3 +48,44 @@ class ProductDetailView(View):
     def get(self, request, product_id):
         product = get_object_or_404(Product, pk=product_id)
         return render(request, 'catalog/product_detail.html', {'product': product})
+
+
+def product_list(request):
+    products = Product.objects.all()
+    return render(request, 'product_list.html', {'products': products})
+
+
+def product_detail(request, pk):
+    product = get_object_or_404(Product, pk=pk)
+    return render(request, 'product_detail.html', {'product': product})
+
+
+def product_create(request):
+    if request.method == 'POST':
+        form = ProductForm(request.POST)
+        if form.is_valid():
+            product = form.save()
+            return redirect('product_detail', pk=product.pk)
+    else:
+        form = ProductForm()
+    return render(request, 'product_form.html', {'form': form, 'action': 'Create'})
+
+
+def product_update(request, pk):
+    product = get_object_or_404(Product, pk=pk)
+    if request.method == 'POST':
+        form = ProductForm(request.POST, instance=product)
+        if form.is_valid():
+            product = form.save()
+            return redirect('product_detail', pk=product.pk)
+    else:
+        form = ProductForm(instance=product)
+    return render(request, 'product_form.html', {'form': form, 'action': 'Update'})
+
+
+def product_delete(request, pk):
+    product = get_object_or_404(Product, pk=pk)
+    if request.method == 'POST':
+        product.delete()
+        return redirect('product_list')
+    return render(request, 'product_confirm_delete.html', {'product': product})

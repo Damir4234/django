@@ -18,11 +18,16 @@ class Category(models.Model):
 class Product(models.Model):
     name = models.CharField(max_length=50, verbose_name='Наименование')
     description = models.TextField(verbose_name='описание', **NULLABLE)
-    image = models.ImageField(upload_to='products/', verbose_name='изображение', **NULLABLE)
+    image = models.ImageField(upload_to='products/',
+                              verbose_name='изображение', **NULLABLE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     purchase_price = models.FloatField(verbose_name='цена за покупку')
-    date_of_creation = models.DateField(verbose_name='дата создания', auto_now_add=True)
-    last_modified_date = models.DateField(verbose_name='дата последнего изменения', auto_now=True)
+    date_of_creation = models.DateField(
+        verbose_name='дата создания', auto_now_add=True)
+    last_modified_date = models.DateField(
+        verbose_name='дата последнего изменения', auto_now=True)
+    is_published = models.BooleanField(
+        default=False, verbose_name='Опубликовано')
 
     def __str__(self):
         return f'{self.name} {self.description} {self.purchase_price} '
