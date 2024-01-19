@@ -1,8 +1,8 @@
-from django.shortcuts import render
 
+from catalog.forms import ModeratorProductForm, ProductForm
 from catalog.models import Category, Product
 from django.views import View
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import redirect, render, get_object_or_404
 from django.http import HttpResponseRedirect
 from .models import Category, Product
 
@@ -47,3 +47,37 @@ class ProductDetailView(View):
     def get(self, request, product_id):
         product = get_object_or_404(Product, pk=product_id)
         return render(request, 'catalog/product_detail.html', {'product': product})
+
+
+def product_create(request):
+    if request.method == 'POST':
+        form = ProductForm(request.POST)
+        if form.is_valid():
+            form.save()
+            # Используйте правильное имя представления
+            return redirect('product:list')  # Поменяйте на 'product:list'
+    else:
+        form = ProductForm()
+    return render(request, 'catalog/product_form.html', {'form': form})
+
+
+def product_update(request, pk):
+    product = Product.objects.get(pk=pk)
+    if request.method == 'POST':
+        form = ModeratorProductForm(request.POST, instance=product)
+        if form.is_valid():
+            form.save()
+            return redirect('product:list')  # Поменяйте на 'product:list'
+    else:
+        form = ModeratorProductForm(instance=product)
+    return render(request, 'catalog/product_form.html', {'form': form})
+
+
+def product_delete(request, pk):
+    Product.objects.get(pk=pk).delete()
+    return redirect('product:list')  # Поменяйте на 'product:list'
+
+
+def product_list(request):
+    products = Product.objects.all()
+    return render(request, 'catalog/product_list.html', {'products': products})

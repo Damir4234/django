@@ -1,0 +1,12 @@
+{% extends 'catalog/base.html' %}
+
+{% block content %}
+  <h2>Create/Edit Product</h2>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Save</button>
+</form>
+  
+  <a href="{% url 'catalog:create_product' %}">Back to Product List</a>
+{% endblock %}
