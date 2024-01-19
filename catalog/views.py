@@ -1,10 +1,10 @@
 
-from catalog.forms import ModeratorProductForm, ProductForm
+from catalog.forms import ModeratorProductForm, ProductForm, VersionForm
 from catalog.models import Category, Product
 from django.views import View
 from django.shortcuts import redirect, render, get_object_or_404
 from django.http import HttpResponseRedirect
-from .models import Category, Product
+from .models import Category, Product, Version
 
 
 def index(request):
@@ -53,8 +53,21 @@ def product_create(request):
     if request.method == 'POST':
         form = ProductForm(request.POST)
         if form.is_valid():
-            form.save()
-            # Поменяйте на правильное имя пространства имен и представления
+            product = form.save()
+
+            # Получаем значения версии из формы
+            version_name = form.cleaned_data.get('version_name')
+            version_number = form.cleaned_data.get('version_number')
+
+            # Проверяем, чтобы оба значения версии были указаны
+            if version_name and version_number:
+                version = Version.objects.create(
+                    product=product,
+                    name=version_name,
+                    number_version=version_number,
+                    current_version=True  # Можете настроить логику для текущей версии
+                )
+
             return redirect('catalog:product_list')
     else:
         form = ProductForm()
@@ -81,3 +94,19 @@ def product_delete(request, pk):
 def product_list(request):
     products = Product.objects.all()
     return render(request, 'catalog/product_list.html', {'products': products})
+
+
+def add_version(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+
+    if request.method == 'POST':
+        version_form = VersionForm(request.POST)
+        if version_form.is_valid():
+            version = version_form.save(commit=False)
+            version.product = product
+            version.save()
+            return redirect('product_detail', product_id=product.id)
+    else:
+        version_form = VersionForm()
+
+    return render(request, 'add_version.html', {'version_form': version_form, 'product': product})

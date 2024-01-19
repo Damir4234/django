@@ -18,6 +18,10 @@ class ProductForm(forms.ModelForm):
             'category': forms.Select(attrs={'class': 'form-control'}),
         }
 
+    version_name = forms.CharField(
+        max_length=100, required=False, label='Версия продукта')
+    version_number = forms.IntegerField(required=False, label='Номер версии')
+
     def clean_name(self):
         cleaned_data = self.cleaned_data['name']
         prohibited_list = ['казино', 'криптовалюта', 'крипта',

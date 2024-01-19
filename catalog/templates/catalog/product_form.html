@@ -1,12 +1,16 @@
 {% extends 'catalog/base.html' %}
 
 {% block content %}
-  <h2>Create/Edit Product</h2>
+  <h2>Create Product</h2>
   <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.as_p }}
+    <label for="id_version_name">Версия продукта:</label>
+    {{ form.version_name }}
+    <label for="id_version_number">Номер версии:</label>
+    {{ form.version_number }}
     <button type="submit">Save</button>
-</form>
+  </form>
   
-  <a href="{% url 'catalog:create_product' %}">Back to Product List</a>
+  <a href="{% url 'catalog:product_list' %}">Back to Product List</a>
 {% endblock %}

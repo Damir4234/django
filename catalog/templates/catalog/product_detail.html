@@ -1,11 +1,19 @@
 {% extends 'catalog/base.html' %}
 
 {% block content %}
-  <h2>{{ product.name }}</h2>
-  <p>{{ product.description }}</p>
+  <h2>{{ product.name }} Details</h2>
+  <p>Description: {{ product.description }}</p>
   <p>Category: {{ product.category.name }}</p>
-  <p>Price: {{ product.purchase_price }}</p>
-  <!-- Add more details as needed -->
+  <p>Purchase Price: {{ product.purchase_price }}</p>
 
-  <a href="{% url 'product:list' %}">Back to Product List</a>
+  <h3>Versions:</h3>
+  <ul>
+    {% for version in product.version_set.all %}
+      <li>{{ version.name }} (Version {{ version.number_version }})</li>
+    {% endfor %}
+  </ul>
+
+  <a href="{% url 'catalog:add_version' product.id %}">Add Version</a>
+  <br>
+  <a href="{% url 'catalog:product_list' %}">Back to Product List</a>
 {% endblock %}

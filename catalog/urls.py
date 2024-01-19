@@ -1,7 +1,7 @@
 from django.urls import include, path
 
 from . import views
-from .views import ContactsView, CatalogItemsView, ProductDetailView
+from .views import ContactsView, CatalogItemsView, ProductDetailView, add_version
 
 app_name = 'catalog'  # Пространство имён для приложения "catalog"
 
@@ -19,5 +19,6 @@ urlpatterns = [
         path('delete/<int:pk>/', views.product_delete, name='product_delete'),
 
         path('product/list/', views.product_list, name='product_list'),
+        path('add_version/<int:product_id>/', add_version, name='add_version'),
     ])),
 ]
