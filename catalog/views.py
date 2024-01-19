@@ -54,8 +54,8 @@ def product_create(request):
         form = ProductForm(request.POST)
         if form.is_valid():
             form.save()
-            # Используйте правильное имя представления
-            return redirect('product:list')  # Поменяйте на 'product:list'
+            # Поменяйте на правильное имя пространства имен и представления
+            return redirect('catalog:product_list')
     else:
         form = ProductForm()
     return render(request, 'catalog/product_form.html', {'form': form})

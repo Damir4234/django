@@ -14,8 +14,10 @@ urlpatterns = [
     path('product/', include([
         path('product/create/', views.product_create, name='create_product'),
 
-        path('update/<int:pk>/', views.product_update, name='update'),
-        path('delete/<int:pk>/', views.product_delete, name='delete'),
+        path('update/<int:pk>/', views.product_update, name='product_update'),
+
+        path('delete/<int:pk>/', views.product_delete, name='product_delete'),
+
         path('product/list/', views.product_list, name='product_list'),
     ])),
 ]
