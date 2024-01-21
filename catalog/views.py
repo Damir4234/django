@@ -1,5 +1,5 @@
 
-from catalog.forms import ModeratorProductForm, ProductForm, VersionForm
+from catalog.forms import EditProductForm, ModeratorProductForm, ProductForm, VersionForm
 from catalog.models import Category, Product
 from django.views import View
 from django.shortcuts import redirect, render, get_object_or_404
@@ -44,9 +44,13 @@ class CatalogItemsView(View):
 
 
 class ProductDetailView(View):
+    template_name = 'catalog/product_detail.html'
+
     def get(self, request, product_id):
         product = get_object_or_404(Product, pk=product_id)
-        return render(request, 'catalog/product_detail.html', {'product': product})
+        versions = product.versions.all()
+
+        return render(request, self.template_name, {'product': product, 'versions': versions})
 
 
 def product_create(request):
@@ -75,15 +79,18 @@ def product_create(request):
 
 
 def product_update(request, pk):
-    product = Product.objects.get(pk=pk)
+    product = get_object_or_404(Product, pk=pk)
+
     if request.method == 'POST':
-        form = ModeratorProductForm(request.POST, instance=product)
+        form = EditProductForm(request.POST, instance=product)
         if form.is_valid():
             form.save()
-            return redirect('product:list')  # Поменяйте на 'product:list'
+            return redirect('catalog:product_detail', product_id=product.pk)
+
     else:
-        form = ModeratorProductForm(instance=product)
-    return render(request, 'catalog/product_form.html', {'form': form})
+        form = EditProductForm(instance=product)
+
+    return render(request, 'catalog/product_form.html', {'form': form, 'product': product})
 
 
 def product_delete(request, pk):

@@ -19,8 +19,15 @@ class ProductForm(forms.ModelForm):
         }
 
     version_name = forms.CharField(
-        max_length=100, required=False, label='Версия продукта')
+        max_length=100, required=False, label='Имя версии')
     version_number = forms.IntegerField(required=False, label='Номер версии')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if not self.instance.id:
+            # Если объект еще не создан (редактирование), скрываем поля версии
+            self.fields['version_name'].widget = forms.HiddenInput()
+            self.fields['version_number'].widget = forms.HiddenInput()
 
     def clean_name(self):
         cleaned_data = self.cleaned_data['name']
@@ -31,6 +38,37 @@ class ProductForm(forms.ModelForm):
                 raise forms.ValidationError("Продукт запрещен на площадке")
 
         return cleaned_data
+
+    def save(self, commit=True):
+        product = super().save(commit=False)
+
+        version_name = self.cleaned_data.get('version_name')
+        version_number = self.cleaned_data.get('version_number')
+
+        if version_name and version_number:
+            version = Version.objects.create(
+                product=product,
+                name=version_name,
+                number_version=version_number,
+                current_version=True,
+            )
+            product.versions.add(version)
+
+        if commit:
+            product.save()
+
+        return product
+
+
+class CreateProductForm(ProductForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['version_name'].widget = forms.HiddenInput()
+        self.fields['version_number'].widget = forms.HiddenInput()
+
+
+class EditProductForm(ProductForm):
+    pass
 
 
 class ModeratorProductForm(StyleFormMixin, forms.ModelForm):
@@ -52,4 +90,4 @@ class ModeratorProductForm(StyleFormMixin, forms.ModelForm):
 class VersionForm(forms.ModelForm):
     class Meta:
         model = Version
-        fields = ('product', 'name', 'number_version', 'current_version',)
+        fields = ('name', 'number_version', 'current_version',)

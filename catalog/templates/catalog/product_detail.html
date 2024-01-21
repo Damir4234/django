@@ -8,7 +8,7 @@
 
   <h3>Versions:</h3>
   <ul>
-    {% for version in product.version_set.all %}
+    {% for version in versions %}
       <li>{{ version.name }} (Version {{ version.number_version }})</li>
     {% endfor %}
   </ul>

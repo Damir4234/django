@@ -1,14 +1,16 @@
 {% extends 'catalog/base.html' %}
 
 {% block content %}
-  <h2>Create Product</h2>
+  <h2>{% if product.id %}Edit Product{% else %}Create Product{% endif %}</h2>
   <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.as_p }}
-    <label for="id_version_name">Версия продукта:</label>
-    {{ form.version_name }}
-    <label for="id_version_number">Номер версии:</label>
-    {{ form.version_number }}
+    {% if product.id %}
+      <label for="id_version_name">Версия продукта:</label>
+      {{ form.version_name }}
+      <label for="id_version_number">Номер версии:</label>
+      {{ form.version_number }}
+    {% endif %}
     <button type="submit">Save</button>
   </form>
   
