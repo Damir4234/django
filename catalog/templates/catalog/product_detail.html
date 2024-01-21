@@ -13,7 +13,7 @@
     {% endfor %}
   </ul>
 
-  <a href="{% url 'catalog:add_version' product.id %}">Add Version</a>
+  <a href="{% url 'catalog:product_update' product.id %}">Edit</a>
   <br>
   <a href="{% url 'catalog:product_list' %}">Back to Product List</a>
 {% endblock %}
