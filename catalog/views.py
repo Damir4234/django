@@ -7,17 +7,18 @@ from django.http import HttpResponseRedirect
 from .models import Category, Product, Version
 
 
-def index(request):
-    products = Product.objects.all()
+class IndexView(View):
+    def get(self, request):
+        products = Product.objects.all()
 
-    for product in products:
-        if len(product.description) > 100:
-            product.description = product.description[:100] + '...'
+        for product in products:
+            if len(product.description) > 100:
+                product.description = product.description[:100] + '...'
 
-    context = {
-        'products': products,
-    }
-    return render(request, 'catalog/index.html', context)
+        context = {
+            'products': products,
+        }
+        return render(request, 'catalog/index.html', context)
 
 
 class ContactsView(View):
@@ -53,8 +54,8 @@ class ProductDetailView(View):
         return render(request, self.template_name, {'product': product, 'versions': versions})
 
 
-def product_create(request):
-    if request.method == 'POST':
+class ProductCreateView(View):
+    def post(self, request):
         form = ProductForm(request.POST)
         if form.is_valid():
             product = form.save()
@@ -73,47 +74,49 @@ def product_create(request):
                 )
 
             return redirect('catalog:product_list')
-    else:
+
+    def get(self, request):
         form = ProductForm()
-    return render(request, 'catalog/product_form.html', {'form': form})
+        return render(request, 'catalog/product_form.html', {'form': form})
 
 
-def product_update(request, pk):
-    product = get_object_or_404(Product, pk=pk)
-
-    if request.method == 'POST':
+class ProductUpdateView(View):
+    def post(self, request, pk):
+        product = get_object_or_404(Product, pk=pk)
         form = EditProductForm(request.POST, instance=product)
         if form.is_valid():
             form.save()
             return redirect('catalog:product_detail', product_id=product.pk)
 
-    else:
+    def get(self, request, pk):
+        product = get_object_or_404(Product, pk=pk)
         form = EditProductForm(instance=product)
-
-    return render(request, 'catalog/product_form.html', {'form': form, 'product': product})
-
-
-def product_delete(request, pk):
-    Product.objects.get(pk=pk).delete()
-    return redirect('product:list')  # Поменяйте на 'product:list'
+        return render(request, 'catalog/product_form.html', {'form': form, 'product': product})
 
 
-def product_list(request):
-    products = Product.objects.all()
-    return render(request, 'catalog/product_list.html', {'products': products})
+class ProductDeleteView(View):
+    def post(self, request, pk):
+        Product.objects.get(pk=pk).delete()
+        return redirect('product:list')  # Поменяйте на 'product:list'
 
 
-def add_version(request, product_id):
-    product = get_object_or_404(Product, id=product_id)
+class ProductListView(View):
+    def get(self, request):
+        products = Product.objects.all()
+        return render(request, 'catalog/product_list.html', {'products': products})
 
-    if request.method == 'POST':
+
+class AddVersionView(View):
+    def post(self, request, product_id):
+        product = get_object_or_404(Product, id=product_id)
         version_form = VersionForm(request.POST)
         if version_form.is_valid():
             version = version_form.save(commit=False)
             version.product = product
             version.save()
             return redirect('product_detail', product_id=product.id)
-    else:
-        version_form = VersionForm()
 
-    return render(request, 'add_version.html', {'version_form': version_form, 'product': product})
+    def get(self, request, product_id):
+        product = get_object_or_404(Product, id=product_id)
+        version_form = VersionForm()
+        return render(request, 'add_version.html', {'version_form': version_form, 'product': product})
