@@ -5,6 +5,8 @@ from django.views import View
 from django.shortcuts import redirect, render, get_object_or_404
 from django.http import HttpResponseRedirect
 from .models import Category, Product, Version
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 
 
 class IndexView(View):
@@ -54,23 +56,24 @@ class ProductDetailView(View):
         return render(request, self.template_name, {'product': product, 'versions': versions})
 
 
+@method_decorator(login_required, name='dispatch')
 class ProductCreateView(View):
     def post(self, request):
         form = ProductForm(request.POST)
         if form.is_valid():
-            product = form.save()
+            product = form.save(commit=False)
+            product.user = request.user
+            product.save()
 
-            # Получаем значения версии из формы
             version_name = form.cleaned_data.get('version_name')
             version_number = form.cleaned_data.get('version_number')
 
-            # Проверяем, чтобы оба значения версии были указаны
             if version_name and version_number:
                 version = Version.objects.create(
                     product=product,
                     name=version_name,
                     number_version=version_number,
-                    current_version=True  # Можете настроить логику для текущей версии
+                    current_version=True
                 )
 
             return redirect('catalog:product_list')
@@ -80,6 +83,7 @@ class ProductCreateView(View):
         return render(request, 'catalog/product_form.html', {'form': form})
 
 
+@method_decorator(login_required, name='dispatch')
 class ProductUpdateView(View):
     def post(self, request, pk):
         product = get_object_or_404(Product, pk=pk)
@@ -97,7 +101,7 @@ class ProductUpdateView(View):
 class ProductDeleteView(View):
     def post(self, request, pk):
         Product.objects.get(pk=pk).delete()
-        return redirect('product:list')  # Поменяйте на 'product:list'
+        return redirect('product:list')
 
 
 class ProductListView(View):
