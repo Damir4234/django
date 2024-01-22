@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     # мои приложения:
     'catalog',
     'blog',
+    'users'
 ]
 
 MIDDLEWARE = [
@@ -127,3 +128,17 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+
+AUTH_USER_MODEL = "users.User"
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+LOGIN_URL = '/users/'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.mail.ru'
+EMAIL_PORT = 2525
+EMAIL_HOST_USER = 'moneybuybuy@mail.ru'
+EMAIL_HOST_PASSWORD = 'se5nNLVyFmuPENwnSaP0'
+EMAIL_USE_SSL = False
+EMAIL_USE_TLS = True
