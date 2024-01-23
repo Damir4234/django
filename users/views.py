@@ -17,8 +17,11 @@ class RegisterView(CreateView):
     success_url = reverse_lazy('users:login')
 
     def form_valid(self, form):
-        obj = form.save()
+        obj = form.save(commit=False)
         obj.is_active = False
+        # Генерация и сохранение кода подтверждения
+        obj.verification_code = ''.join(
+            [str(random.randint(0, 9)) for _ in range(6)])
         obj.save()
         send_code_email(obj)
         return super().form_valid(form)
@@ -33,10 +36,12 @@ class ProfileView(UpdateView):
         return self.request.user
 
 
-def verification_user(request, user_pk):
+def verification_user(request, user_pk, verification_code):
     """Верификация почты, после прохождения по ссылке перенаправляет на личные данные"""
-    user = get_object_or_404(User, pk=user_pk)
+    user = get_object_or_404(
+        User, pk=user_pk, verification_code=verification_code)
     user.is_active = True
+    user.verification_code = ''
     user.save()
     login(request, user)
     return redirect(reverse('users:profile'))
