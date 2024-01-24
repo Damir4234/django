@@ -1,8 +1,11 @@
 from django.db import models
 from django.dispatch import receiver
 from django.db.models.signals import post_save
+from django.contrib.auth import get_user_model
+from users.models import User
 
 NULLABLE = {'blank': True, 'null': True}
+User = get_user_model()
 
 
 class Category(models.Model):
@@ -30,6 +33,8 @@ class Product(models.Model):
         verbose_name='дата последнего изменения', auto_now=True)
     versions = models.ManyToManyField(
         'Version', related_name='products', blank=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE,
+                             related_name='products', verbose_name='пользователь')
 
     def __str__(self):
         return f'{self.name} {self.description} {self.purchase_price} '

@@ -2,7 +2,7 @@ from django.db import models
 
 # Create your models here.
 from django.contrib.auth.models import AbstractUser
-from catalog.models import NULLABLE
+NULLABLE = {'blank': True, 'null': True}
 
 
 class User(AbstractUser):
