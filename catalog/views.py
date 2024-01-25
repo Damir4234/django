@@ -35,6 +35,7 @@ class ContactsView(View):
         return render(request, 'catalog/contacts.html')
 
 
+@method_decorator(login_required, name='dispatch')
 class CatalogItemsView(View):
     def get(self, request):
         categories = Category.objects.all()
@@ -46,6 +47,7 @@ class CatalogItemsView(View):
         return render(request, 'catalog/catalog_items.html', context)
 
 
+@method_decorator(login_required, name='dispatch')
 class ProductDetailView(View):
     template_name = 'catalog/product_detail.html'
 
@@ -110,6 +112,7 @@ class ProductListView(View):
         return render(request, 'catalog/product_list.html', {'products': products})
 
 
+@method_decorator(login_required, name='dispatch')
 class AddVersionView(View):
     def post(self, request, product_id):
         product = get_object_or_404(Product, id=product_id)
