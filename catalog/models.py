@@ -3,6 +3,8 @@ from django.dispatch import receiver
 from django.db.models.signals import post_save
 from django.contrib.auth import get_user_model
 from users.models import User
+from django.contrib.auth.models import Permission
+from django.db.models.signals import post_migrate
 
 NULLABLE = {'blank': True, 'null': True}
 User = get_user_model()
@@ -44,6 +46,20 @@ class Product(models.Model):
     class Meta:
         verbose_name = 'Продукт'
         verbose_name_plural = 'Продукты'
+        permissions = [
+            (
+                'set_is_published',
+                'Can publish post'
+            ),
+            (
+                'set_description',
+                'Can change description'
+            ),
+            (
+                'set_category',
+                'Can change category'
+            )
+        ]
 
 
 class Version(models.Model):
@@ -60,3 +76,16 @@ class Version(models.Model):
     class Meta:
         verbose_name = 'версия'
         verbose_name_plural = 'версии'
+
+
+@receiver(post_migrate)
+def create_permissions(sender, **kwargs):
+    if sender.name == 'your_app_name':
+        Permission.objects.create(
+            codename='can_edit_product', name='Can Edit Product')
+        Permission.objects.create(
+            codename='can_publish_post', name='Can Publish Post')
+        Permission.objects.create(
+            codename='can_change_description', name='Can Change Description')
+        Permission.objects.create(
+            codename='can_change_category', name='Can Change Category')

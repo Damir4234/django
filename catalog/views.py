@@ -3,11 +3,13 @@ from catalog.forms import EditProductForm, ModeratorProductForm, ProductForm, Ve
 from catalog.models import Category, Product
 from django.views import View
 from django.shortcuts import redirect, render, get_object_or_404
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseForbidden, HttpResponseRedirect
 from .models import Category, Product, Version
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.contrib.auth.models import Group
 
 
 class IndexView(View):
@@ -86,21 +88,18 @@ class ProductCreateView(View):
         return render(request, 'catalog/product_form.html', {'form': form})
 
 
-def user_is_owner(user, product_id):
-    product = Product.objects.get(id=product_id)
-    return product.user == user
+class ProductUpdateView(PermissionRequiredMixin, View):
 
-
-@method_decorator(login_required, name='dispatch')
-class ProductUpdateView(View):
-    def dispatch(self, request, *args, **kwargs):
-        if not user_is_owner(request.user, kwargs['pk']):
-            return redirect('login')
-        return super().dispatch(request, *args, **kwargs)
+    permission_required = 'catalog.can_edit_product'
+    raise_exception = True
 
     def post(self, request, pk):
         product = get_object_or_404(Product, pk=pk)
         form = EditProductForm(request.POST, instance=product)
+
+        if not request.user.has_perm('catalog.can_edit_product'):
+            return HttpResponseForbidden("У вас нет прав для выполнения этого действия")
+
         if form.is_valid():
             form.save()
             return redirect('catalog:product_detail', product_id=product.pk)
