@@ -7,6 +7,7 @@ from django.http import HttpResponseRedirect
 from .models import Category, Product, Version
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required, user_passes_test
 
 
 class IndexView(View):
@@ -85,8 +86,18 @@ class ProductCreateView(View):
         return render(request, 'catalog/product_form.html', {'form': form})
 
 
+def user_is_owner(user, product_id):
+    product = Product.objects.get(id=product_id)
+    return product.user == user
+
+
 @method_decorator(login_required, name='dispatch')
 class ProductUpdateView(View):
+    def dispatch(self, request, *args, **kwargs):
+        if not user_is_owner(request.user, kwargs['pk']):
+            return redirect('login')
+        return super().dispatch(request, *args, **kwargs)
+
     def post(self, request, pk):
         product = get_object_or_404(Product, pk=pk)
         form = EditProductForm(request.POST, instance=product)

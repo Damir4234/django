@@ -35,6 +35,8 @@ class Product(models.Model):
         'Version', related_name='products', blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE,
                              related_name='products', verbose_name='пользователь')
+    is_published = models.BooleanField(
+        default=False, verbose_name='опубликовано')
 
     def __str__(self):
         return f'{self.name} {self.description} {self.purchase_price} '
