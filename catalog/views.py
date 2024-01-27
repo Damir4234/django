@@ -4,12 +4,15 @@ from catalog.models import Category, Product
 from django.views import View
 from django.shortcuts import redirect, render, get_object_or_404
 from django.http import HttpResponseForbidden, HttpResponseRedirect
+
+from catalog.services import get_cached_categories
 from .models import Category, Product, Version
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.auth.models import Group
+from django.views.decorators.cache import cache_page
 
 
 class IndexView(View):
@@ -41,7 +44,7 @@ class ContactsView(View):
 @method_decorator(login_required, name='dispatch')
 class CatalogItemsView(View):
     def get(self, request):
-        categories = Category.objects.all()
+        categories = get_cached_categories()
         products = Product.objects.all()
         context = {
             'categories': categories,
@@ -54,6 +57,7 @@ class CatalogItemsView(View):
 class ProductDetailView(View):
     template_name = 'catalog/product_detail.html'
 
+    @cache_page(60 * 15)
     def get(self, request, product_id):
         product = get_object_or_404(Product, pk=product_id)
         versions = product.versions.all()
