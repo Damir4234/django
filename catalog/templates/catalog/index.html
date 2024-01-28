@@ -11,7 +11,7 @@
             <div class="card-body">
                 <p>{{ product.description|truncatechars:100 }}</p>
                 <p>Цена: ${{ product.purchase_price }}</p>
-                <a href="{% url 'product_detail' product.id %}" class="btn btn-outline-primary">Подробнее</a>
+                <a href="{% url 'catalog:product_detail' product.id %}" class="btn btn-outline-primary">Подробнее</a>
             </div>
         </div>
     </div>

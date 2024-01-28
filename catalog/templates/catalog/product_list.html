@@ -1,0 +1,15 @@
+{% extends 'catalog/base.html' %}
+
+{% block content %}
+  <h2>Product List</h2>
+  <ul>
+    {% for product in products %}
+      <li>
+        <a href="{% url 'catalog:product_detail' product.id %}">{{ product.name }}</a>
+            <a href="{% url 'catalog:product_update' product.id %}">Edit</a>
+            <a href="{% url 'catalog:product_delete' product.id %}">Delete</a>
+      </li>
+    {% endfor %}
+  </ul>
+  <a href="{% url 'catalog:create_product' %}">Create New Product</a>
+{% endblock %}

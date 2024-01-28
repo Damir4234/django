@@ -1,0 +1,19 @@
+{% extends 'catalog/base.html' %}
+
+{% block content %}
+  <h2>{{ product.name }} Details</h2>
+  <p>Description: {{ product.description }}</p>
+  <p>Category: {{ product.category.name }}</p>
+  <p>Purchase Price: {{ product.purchase_price }}</p>
+
+  <h3>Versions:</h3>
+  <ul>
+    {% for version in versions %}
+      <li>{{ version.name }} (Version {{ version.number_version }})</li>
+    {% endfor %}
+  </ul>
+
+  <a href="{% url 'catalog:product_update' product.id %}">Edit</a>
+  <br>
+  <a href="{% url 'catalog:product_list' %}">Back to Product List</a>
+{% endblock %}

@@ -77,10 +77,26 @@
     </style>
 </head>
 <body>
+    <div class="header">
+        <h5 class="font-weight-normal">Skystore</h5>
+        <nav>
+            <a href="{% url 'catalog:catalog_items' %}" class="btn btn-outline-primary">Каталог</a>
+            <a href="/contacts/" class="btn btn-outline-primary">Контакты</a>
+            
+            {% if user.is_authenticated %}
+                <a href="{% url 'users:profile' %}" class="btn btn-outline-primary">Профиль</a>
+                <a href="{% url 'users:logout' %}" class="btn btn-outline-primary">Выйти</a>
+            {% else %}
+                <a href="{% url 'users:login' %}" class="btn btn-outline-primary">Войти</a>
+                <a href="{% url 'users:register' %}" class="btn btn-outline-primary">Зарегистрироваться</a>
+            {% endif %}
+        </nav>
+    </div>
 <div class="header">
     <h5 class="font-weight-normal">Skystore</h5>
     <nav>
-        <a href="{% url 'catalog_items' %}" class="btn btn-outline-primary">Каталог</a>
+        <a href="{% url 'catalog:catalog_items' %}" class="btn btn-outline-primary">Каталог</a>
+
         <a href="/contacts/" class="btn btn-outline-primary">Контакты</a>
     </nav>
 </div>
@@ -136,6 +152,9 @@
                 <ul class="list-unstyled text-small">
                     <li><a href="/contacts/" class="text-muted">Контакты</a></li>
                     <li><a href="/blog/list" class="text-muted">блог</a></li>
+                    <li><a href="{% url 'catalog:create_product' %}" class="btn btn-outline-primary">Добавить продукт</a>
+                    </li>
+                    
                 </ul>
             </div>
         </div>
